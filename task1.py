@@ -11,7 +11,7 @@ print(list(map(lambda x: x * 2, test_1)))
 #2 через функцию map перемножить test_1 и test_2 поэлементно
 print(list(map(lambda x, y: x * y, test_1, test_2)))
 #3 через функцию filter вернуть все элементы test_2 которые делятся целочисленно на 3
-print(list(filter(lambda x: not x % 3, test_2)))
+print(list(filter(lambda x: x % 3 == 0, test_2)))
 #4 через функцию reduce вернуть cумму всех элементов списка test1 + test2 (должно получиться 54)
 print(reduce(lambda acc, val: acc + val, test_1 + test_2))
 #5 через zip объеденить оба списка
