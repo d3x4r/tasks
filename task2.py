@@ -22,7 +22,7 @@ print('result', sum(1, 2))
 
 def function_timer_deco(fn):
     def inner(*args, **kwargs):
-        TIMER_VALUE = 1
+        TIMER_VALUE = 4
         results = []
 
         def get_main_fn_value():
