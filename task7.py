@@ -1,24 +1,50 @@
-from threading import Thread
+import time
+import itertools
+from concurrent.futures import ProcessPoolExecutor
 
 
-def get_happy_tickets(tickets_list):
-    result = []
+data = (f'{q}{w}{e}{r}{t}{y}{u}{i}{o}{p}{a}{s}'
+        for q in range(5)
+        for w in range(5)
+        for e in range(5)
+        for r in range(5)
+        for t in range(5)
+        for y in range(5)
+        for u in range(5)
+        for i in range(5)
+        for o in range(5)
+        for p in range(5)
+        for a in range(5)
+        for s in range(5)
+        )
 
-    def get_sum(ticket_number, result_array):
-        converted_values = [int(num) for num in ticket_number]
-        result_array.append(sum(converted_values))
 
-    for ticket in tickets_list:
-        sum_result = []
-        first_part = ticket[:6]
-        second_part = ticket[6:]
-        th1 = Thread(target=get_sum, args=(first_part, sum_result))
-        th2 = Thread(target=get_sum, args=(second_part, sum_result))
-        th1.start()
-        th2.start()
-        th1.join()
-        th2.join()
-        if (sum_result[0] == sum_result[1]):
-            result.append(ticket)
+def get_happy_tickets(tickets):
+    tickets_list = []
 
-    return result
+    for ticket in tickets:
+        ticket_first_part = ticket[:6]
+        ticket_second_part = ticket[6:]
+
+        if (sum([int(num) for num in ticket_first_part]) == sum([int(num) for num in ticket_second_part])):
+            tickets_list.append(ticket)
+
+    return tickets_list
+
+
+if (__name__ == '__main__'):
+    CHUNK_COUNT = 6
+    start_time = time.time()
+    with ProcessPoolExecutor() as executor:
+
+        tickets_list = list(data)
+        chunk_size = len(tickets_list) / CHUNK_COUNT
+
+        chunks = [tickets_list[int(i * chunk_size): int((i + 1) * chunk_size)]
+                  for i in range(CHUNK_COUNT)]
+
+        result_chunks = executor.map(get_happy_tickets, chunks)
+
+        result = itertools.chain(*result_chunks)
+        print(len(list(result)))
+        print("--- %s seconds ---" % (time.time() - start_time))
